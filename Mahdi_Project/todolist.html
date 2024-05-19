@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.4/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.4/dist/sweetalert2.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست کار ها</title>
+    <style>
+        body {
+            background: #dde1e7;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="d-flex flex-column align-items-center justify-content-center">
+        <div class="mt-2 d-flex justify-content-between gap-3 mb-2 mt-2">
+            <a class="btn btn-secondary" href="new_item.html">کار جدید</a>
+            <a class="btn btn-secondary" href="login.html">برگشت به صفحه ورود</a>
+        </div>
+        <div class="col-lg-8">
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th>شناسه</th>
+                        <th>موضوع</th>
+                        <th>متن</th>
+                        <th>حالت کار</th>
+                        <th>حذف</th>
+                        <th>ویرایش</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let numTodo = localStorage.getItem("todo");
+        let extra = localStorage.getItem(numTodo);
+        let table = document.querySelector('tbody');
+        console.log(extra);
+        for (let index = 0; index < extra; index++) {
+            let todoitem = JSON.parse(localStorage.getItem(("todoNew" + numTodo) + index));
+            console.log(todoitem);
+
+            const tr = document.createElement("tr");
+            table.appendChild(tr);
+            if (todoitem != null) {
+                const del = document.createElement("button");
+                const tdId = document.createElement('td');
+                const content = document.createElement('td');
+                const title = document.createElement('td');
+                const deltd = document.createElement('td');
+                const edittd = document.createElement('td');
+                const chtd = document.createElement('td');
+                const chd = document.createElement('div');
+                const ch = document.createElement('input');
+                const edit = document.createElement('a');
+                chd.className = "form-check form-switch";
+                deltd.append(del);
+                edittd.append(edit);
+                chtd.append(chd);
+                chd.append(ch);
+                ch.type = "checkbox";
+                ch.className = "form-check-input";
+                ch.addEventListener("change", () => {
+                    let che = JSON.parse(localStorage.getItem(("todoNew" + numTodo) + index));
+                    console.log(che.Checked);
+                    if (che.Checked == 1) {
+                        che.Checked = 2;
+                        ch.checked = false;
+                    }
+                    else {
+                        che.Checked = 1;
+                        ch.checked = true;
+                    }
+                    localStorage.setItem(("todoNew" + numTodo) + index, JSON.stringify(che));
+                })
+                if (todoitem.Checked == 1) {
+                    ch.checked = true;
+                }
+                else {
+
+                    ch.checked = false;
+                }
+                edit.href = "edit.html";
+                edit.innerText = "ویرایش";
+                edit.className = "btn btn-dark";
+                del.className = "btn btn-danger";
+                edit.name = index;
+                localStorage.setItem("edit", edit.name);
+                del.innerText = "حذف";
+                del.addEventListener('click', () => {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "ایا حذف شود",
+                        showCancelButton: true,
+                        confirmButtonText: "حذف",
+                        cancelButtonText: "لغو",
+                        confirmButtonColor: "#cc3300",
+                        cancelButtonColor: "#4BB543"
+                    }).then((result) => {
+
+                        if (result.isConfirmed) {
+
+                            localStorage.removeItem(("todoNew" + numTodo) + index);
+                            window.location.reload();
+                        }
+                    });
+
+                })
+                tdId.innerText = todoitem.id;
+                content.innerText = todoitem.Content;
+                title.innerText = todoitem.Title;
+                tr.append(tdId, title, content, chtd, deltd, edittd);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
